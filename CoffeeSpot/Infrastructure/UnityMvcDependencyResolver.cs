@@ -1,18 +1,15 @@
 ﻿using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+using IDependencyResolver = System.Web.Mvc.IDependencyResolver;
 
 namespace CoffeeSpot.Infrastructure
 {
-    public class UnityDependencyResolver : IDependencyResolver
+    public class UnityMvcDependencyResolver : IDependencyResolver
     {
         private IUnityContainer container;
 
-        public UnityDependencyResolver(IUnityContainer container)
+        public UnityMvcDependencyResolver(IUnityContainer container)
         {
             this.container = container;
         }
@@ -22,7 +19,8 @@ namespace CoffeeSpot.Infrastructure
             try
             {
                 return container.Resolve(serviceType);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return null;
             }

@@ -1,4 +1,5 @@
-﻿using CoffeeSpot.Controllers;
+﻿using System.Web.Http;
+using CoffeeSpot.Controllers;
 using CoffeeSpot.Data;
 using CoffeeSpot.Infrastructure;
 using CoffeeSpot.Repositories;
@@ -10,15 +11,19 @@ namespace CoffeeSpot.App_Start
 {
     public static class IoCConfigurator
     {
-        public static void ConfigureUnityContainer()
+        public static IUnityContainer ConfigureUnityContainer()
         {
             IUnityContainer container = new UnityContainer();
 
             Register(container);
 
-            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            DependencyResolver.SetResolver(new UnityMvcDependencyResolver(container));
+
+            GlobalConfiguration.Configuration.DependencyResolver = new UnityWebApiDependencyResolver(container);
+
+            return container;
         }
-        
+
         public static void Register(IUnityContainer container)
         {
             container.RegisterType<ICoffeeSpotRepository, CoffeeSpotRepository>();

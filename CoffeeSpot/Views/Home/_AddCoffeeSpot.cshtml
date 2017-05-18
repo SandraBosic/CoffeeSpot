@@ -4,8 +4,6 @@
 
 @using (Html.BeginForm("CreateCoffeeSpot", "Home", FormMethod.Post))
 {
-    @Html.AntiForgeryToken()
-
     <div class="form-group">
         @Html.LabelFor(model => model.Name)
         <div>

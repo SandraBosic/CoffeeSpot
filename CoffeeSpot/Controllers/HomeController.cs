@@ -1,10 +1,5 @@
 ﻿using CoffeeSpot.Models;
-using CoffeeSpot.Repositories;
 using CoffeeSpot.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace CoffeeSpot.Controllers
@@ -18,9 +13,11 @@ namespace CoffeeSpot.Controllers
             this.coffeeRepository = coffeeRepository;
         }
 
-        // GET: Home
         public ActionResult Index()
         {
+            var feedback = new FeedbackModel() { Comment = "Sandra's test comment from code.", Grade = 5 };
+            coffeeRepository.SaveFeedbackForCoffeeSpot(1, feedback);
+
             var coffeeSpots = coffeeRepository.GetAllCofeeSpots();
 
             return View(coffeeSpots);
@@ -29,6 +26,7 @@ namespace CoffeeSpot.Controllers
         public ActionResult CreateCoffeeSpot(CoffeeSpotModel model)
         {
             coffeeRepository.SaveCoffeeSpot(model);
+
             return RedirectToAction("Index");
         }
 

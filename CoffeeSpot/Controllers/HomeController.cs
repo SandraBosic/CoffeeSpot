@@ -15,9 +15,6 @@ namespace CoffeeSpot.Controllers
 
         public ActionResult Index()
         {
-            var feedback = new FeedbackModel() { Comment = "Sandra's test comment from code.", Grade = 5 };
-            coffeeRepository.SaveFeedbackForCoffeeSpot(1, feedback);
-
             var coffeeSpots = coffeeRepository.GetAllCofeeSpots();
 
             return View(coffeeSpots);

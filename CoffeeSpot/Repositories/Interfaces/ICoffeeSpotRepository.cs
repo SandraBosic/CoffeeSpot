@@ -1,9 +1,5 @@
 ﻿using CoffeeSpot.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoffeeSpot.Repositories.Interfaces
 {
@@ -13,9 +9,8 @@ namespace CoffeeSpot.Repositories.Interfaces
 
         CoffeeSpotModel GetCoffeeSpot(int id);
 
-        //void SaveFeedbackForCoffeeSpot(int cofeeSpotID);
+        void SaveFeedbackForCoffeeSpot(int cofeeSpotID, FeedbackModel feedbackModel);
 
         void SaveCoffeeSpot(CoffeeSpotModel cofeeSpotModel);
-
     }
 }

@@ -1,10 +1,10 @@
 ﻿using CoffeeSpot.Data;
+using CoffeeSpot.Data.Entities;
 using CoffeeSpot.Models;
 using CoffeeSpot.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace CoffeeSpot.Repositories
 {
@@ -17,73 +17,91 @@ namespace CoffeeSpot.Repositories
             this.context = context;
         }
 
-    public List<CoffeeSpotModel> GetAllCofeeSpots()
-    {
-        List<CoffeeSpotModel> results = new List<CoffeeSpotModel>();
-
-        var data = context.CoffeeSpots.Include("Feedbacks");
-
-        foreach (var item in data)
+        public List<CoffeeSpotModel> GetAllCofeeSpots()
         {
-            var coffeeSpot = ConvertCoffeeSpotEntityToModel(item);
+            List<CoffeeSpotModel> results = new List<CoffeeSpotModel>();
 
-            results.Add(coffeeSpot);
-        }
+            var data = context.CoffeeSpots.Include("Feedbacks");
 
-        return results;
-    }
-
-    public CoffeeSpotModel GetCoffeeSpot(int id)
-    {
-        var data = context.CoffeeSpots.Include("Feedbacks").SingleOrDefault(x => x.Id == id);
-
-        if (data != null)
-            return ConvertCoffeeSpotEntityToModel(data);
-
-        return null;
-    }
-
-    private CoffeeSpotModel ConvertCoffeeSpotEntityToModel(CoffeeSpot.Data.Entities.CoffeeSpot entity)
-    {
-        List<FeedbackModel> feedbacks = new List<FeedbackModel>();
-
-        foreach (var fb in entity.Feedbacks)
-        {
-            FeedbackModel feedback = new FeedbackModel()
+            foreach (var item in data)
             {
-                Id = fb.Id,
-                Comment = fb.Comment,
-                Grade = fb.Grade
-            };
-            feedbacks.Add(feedback);
+                var coffeeSpot = ConvertCoffeeSpotEntityToModel(item);
+
+                results.Add(coffeeSpot);
+            }
+
+            return results;
         }
 
-        CoffeeSpotModel coffeeSpot = new CoffeeSpotModel()
+        public CoffeeSpotModel GetCoffeeSpot(int id)
         {
-            Id = entity.Id,
-            Address = entity.Address,
-            Description = entity.Description,
-            FoundationDate = entity.FoundationDate,
-            Name = entity.Name,
-            WorkingHours = String.Format("{0} - {1}", entity.WorkingHoursStart, entity.WorkingHoursEnd),
-            Feedbacks = feedbacks
-        };
+            var data = context.CoffeeSpots.Include("Feedbacks").SingleOrDefault(x => x.Id == id);
 
-        return coffeeSpot;
-    }
+            if (data != null)
+                return ConvertCoffeeSpotEntityToModel(data);
 
-    public void SaveCoffeeSpot(CoffeeSpotModel model)
-    {
-        CoffeeSpot.Data.Entities.CoffeeSpot entity = new CoffeeSpot.Data.Entities.CoffeeSpot()
+            return null;
+        }
+
+        public void SaveFeedbackForCoffeeSpot(int cofeeSpotID, FeedbackModel feedbackModel)
         {
-            Name = model.Name,
-            Address = model.Address,
-            Description = model.Description,
-            FoundationDate = model.FoundationDate
-        };
+            Feedback feedback = new Feedback()
+            {
+                Comment = feedbackModel.Comment,
+                Grade = feedbackModel.Grade
+            };
 
-        context.CoffeeSpots.Add(entity);
-        context.SaveChanges();
-    }
+            var coffeeSpot = context.CoffeeSpots.Single(x => x.Id == cofeeSpotID);
+
+            if (coffeeSpot.Feedbacks == null)
+                coffeeSpot.Feedbacks = new List<Feedback>();
+
+            coffeeSpot.Feedbacks.Add(feedback);
+            context.SaveChanges();
+        }
+
+        public void SaveCoffeeSpot(CoffeeSpotModel model)
+        {
+            CoffeeSpot.Data.Entities.CoffeeSpot entity = new CoffeeSpot.Data.Entities.CoffeeSpot()
+            {
+                Name = model.Name,
+                Address = model.Address,
+                Description = model.Description,
+                FoundationDate = model.FoundationDate
+            };
+
+            context.CoffeeSpots.Add(entity);
+            context.SaveChanges();
+        }
+
+        private CoffeeSpotModel ConvertCoffeeSpotEntityToModel(CoffeeSpot.Data.Entities.CoffeeSpot entity)
+        {
+            List<FeedbackModel> feedbacks = new List<FeedbackModel>();
+
+            foreach (var fb in entity.Feedbacks)
+            {
+                FeedbackModel feedback = new FeedbackModel()
+                {
+                    Id = fb.Id,
+                    Comment = fb.Comment,
+                    Grade = fb.Grade
+                };
+                feedbacks.Add(feedback);
+            }
+
+            CoffeeSpotModel coffeeSpot = new CoffeeSpotModel()
+            {
+                Id = entity.Id,
+                Address = entity.Address,
+                Description = entity.Description,
+                FoundationDate = entity.FoundationDate,
+                Name = entity.Name,
+                WorkingHours = String.Format("{0} - {1}", entity.WorkingHoursStart, entity.WorkingHoursEnd),
+                Feedbacks = feedbacks
+            };
+
+            return coffeeSpot;
+        }
+
     }
 }

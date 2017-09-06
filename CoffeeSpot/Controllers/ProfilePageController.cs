@@ -1,4 +1,5 @@
-﻿using CoffeeSpot.Repositories.Interfaces;
+﻿using CoffeeSpot.Models;
+using CoffeeSpot.Repositories.Interfaces;
 using System.Web.Mvc;
 
 namespace CoffeeSpot.Controllers
@@ -28,6 +29,17 @@ namespace CoffeeSpot.Controllers
                 ViewBag.AverageGrade = 0;
 
             return View(coffeeSpotDetails);
+        }
+
+        public ActionResult ClearForm()
+        {
+            return null;
+        }
+
+        public ActionResult CreateFeedback(FeedbackModel model, int id)
+        {
+            coffeeRepository.SaveFeedbackForCoffeeSpot(id, model);
+            return RedirectToAction("Index", new { id = id });
         }
     }
 }

@@ -34,6 +34,10 @@
     }
 </div>
 
+<div id="addNewFeedback">
+    @Html.Partial("_AddFeedback", new CoffeeSpot.Models.FeedbackModel())
+</div>
+
 <p>
     @Html.ActionLink("Back to List", "Index", "Home")
 </p>
